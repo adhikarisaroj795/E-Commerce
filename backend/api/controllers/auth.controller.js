@@ -4,14 +4,15 @@ const sendToken = require("../utils/jwtToken");
 class UserController {
   static register = async (req, res, next) => {
     const { userName, email, password } = req.body;
+    console.log(userName, email, password);
     try {
       if (
         !userName ||
-        userName === "" ||
+        userName.trim() === "" ||
         !email ||
-        email === "" ||
+        email.trim() === "" ||
         !password ||
-        password === ""
+        password.trim() === ""
       ) {
         return next(new ErrorHandler("All fields are required", 400));
       }
@@ -24,6 +25,7 @@ class UserController {
         msg: "User created success",
       });
     } catch (error) {
+      console.log("errror caught", error);
       next(error);
     }
   };
@@ -44,3 +46,5 @@ class UserController {
   };
 }
 module.exports = UserController;
+
+///2:08:51

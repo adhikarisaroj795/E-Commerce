@@ -2,9 +2,10 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const routes = require("./routes/index");
-
+const errorMiddleware = require("./middleware/errorMiddeware");
 const cookieParser = require("cookie-parser");
-const errorMiddeware = require("./middleware/errorMiddeware");
+const path = require("path");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const corsOptions = {
@@ -25,6 +26,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(routes);
 
-app.use(errorMiddeware);
+// Serve static files from React app's build directory
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// Proxy requests to React development server during development
+app.use("/", createProxyMiddleware({ target: "http://localhost:5173" }));
+
+// Catch-all route for serving index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
+
+app.use(errorMiddleware);
 
 module.exports = app;

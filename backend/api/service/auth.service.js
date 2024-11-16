@@ -9,8 +9,15 @@ class AuthService {
         throw new ErrorHandler("Email already exist ", 409);
       }
 
+      const existingUsername = await userModel.findOne({ username: userName });
+      if (existingUsername) {
+        throw new ErrorHandler("User name not available", 409);
+      }
+
+      console.log(userName, email, password, "i have username");
+
       const newUser = new userModel({
-        userName,
+        username: userName,
         email,
         password,
       });
