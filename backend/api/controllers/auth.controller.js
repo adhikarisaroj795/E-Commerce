@@ -49,6 +49,17 @@ class UserController {
       next(error);
     }
   };
+
+  static logOut = async (req, res, next) => {
+    try {
+      res.status(200).clearCookie("token").json({
+        status: true,
+        message: "Logged out successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 module.exports = UserController;
 
