@@ -57,12 +57,13 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 
 // Method to generate a JWT token
 userSchema.methods.getJwtToken = function () {
-  const age = 1000 * 60 * 60 * 24 * 7; // Token expiration time (1 week)
+  const age = "60m"; // Token expiration time (1 week)
   return jwt.sign(
     {
       username: this.username,
       id: this._id,
       role: this.role,
+      email: this.email,
     },
     process.env.JWT_SECRET, // Your JWT secret from .env
     { expiresIn: age }

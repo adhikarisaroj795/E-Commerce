@@ -33,7 +33,12 @@ class UserController {
   static login = async (req, res, next) => {
     const { email, password } = req.body;
     try {
-      if (!email || email === "" || !password || password === "") {
+      if (
+        !email ||
+        email.trim() === "" ||
+        !password ||
+        password.trim() === ""
+      ) {
         return next(new ErrorHandler("All fields are required", 400));
       }
 
