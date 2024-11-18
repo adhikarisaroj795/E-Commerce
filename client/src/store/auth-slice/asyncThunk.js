@@ -36,7 +36,32 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         }
       );
-      return response.data; 
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
+export const checkAuth = createAsyncThunk(
+  "/auth/checkauth",
+  async (FormData, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3921/api/v1/auth/check-auth",
+
+        {
+          withCredentials: true,
+          headers: {
+            "Cache-Control":
+              "no-store, no-cache, must-revalidate, proxy-revalidate",
+            Expires: "0",
+          },
+        }
+      );
+      return response.data;
     } catch (error) {
       if (error.response) {
         return rejectWithValue(error.response.data);
