@@ -1,6 +1,6 @@
-const ErrorHandler = require("../utils/ErrorHandler");
-const auth_svc = require("../service/auth.service");
-const sendToken = require("../utils/jwtToken");
+const ErrorHandler = require("../../utils/ErrorHandler");
+const auth_svc = require("../../service/auth/auth.service");
+const sendToken = require("../../utils/jwtToken");
 class UserController {
   static register = async (req, res, next) => {
     const { userName, email, password } = req.body;

@@ -1,5 +1,5 @@
-const userModel = require("../models/user.model");
-const ErrorHandler = require("../utils/ErrorHandler");
+const userModel = require("../../models/auth/user.model");
+const ErrorHandler = require("../../utils/ErrorHandler");
 
 class AuthService {
   static register = async (userName, email, password) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const auth_ctrl = require("../controllers/auth.controller");
-const AuthRBAMiddleware = require("../middleware/RBAuth.middleware");
+const auth_ctrl = require("../../controllers/auth/auth.controller");
+const AuthRBAMiddleware = require("../../middleware/RBAuth.middleware");
 
 router.route("/register").post(auth_ctrl.register);
 router.route("/login").post(auth_ctrl.login);
