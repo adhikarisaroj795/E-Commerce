@@ -26,17 +26,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(routes);
 
-// Serve static files from React app's build directory
-app.use(express.static(path.join(__dirname, "../client/build")));
-
-// Proxy requests to React development server during development
-app.use("/", createProxyMiddleware({ target: "http://localhost:5173" }));
-
-// Catch-all route for serving index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
-
 app.use(errorMiddleware);
 
 module.exports = app;
