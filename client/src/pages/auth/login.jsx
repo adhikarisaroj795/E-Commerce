@@ -32,7 +32,7 @@ const AuthLogin = () => {
           title: data?.payload?.errorMessage,
         });
       }
-      console.log(data);
+      // console.log(data);
     });
   };
   return (

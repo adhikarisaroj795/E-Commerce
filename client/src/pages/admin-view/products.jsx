@@ -8,7 +8,9 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
-import React, { Fragment, useState } from "react";
+import { fetchAllProducts } from "@/store/admin-slice/products-slice/asyncThunk";
+import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialFormData = {
   image: null,
@@ -28,8 +30,15 @@ const AdminProducts = () => {
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
-  const onSubmit = () => {};
-  console.log(formData);
+  const { productList } = useSelector((state) => state.adminProducts);
+  const dispatch = useDispatch();
+  const onSubmit = (event) => {
+    event.preventDefault();
+  };
+  useEffect(() => {
+    dispatch(fetchAllProducts());
+  }, [dispatch]);
+  console.log(productList, "productLost");
   return (
     <Fragment>
       <div className="mb-5 w-full flex justify-end">
@@ -52,6 +61,7 @@ const AdminProducts = () => {
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
             setImageLoadingState={setImageLoadingState}
+            imageLoadingState={imageLoadingState}
           />
           <div className="py-6">
             <CommonForm
@@ -69,3 +79,5 @@ const AdminProducts = () => {
 };
 
 export default AdminProducts;
+
+//4:23:24
