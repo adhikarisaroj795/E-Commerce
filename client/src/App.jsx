@@ -20,6 +20,7 @@ import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./store/auth-slice/asyncThunk";
 import { Skeleton } from "@/components/ui/skeleton";
+import ErrorBoundary from "./pages/utils/ErrorBoundry";
 
 const App = () => {
   const { isAuthenticated, user, isLoading } = useSelector(
@@ -59,7 +60,14 @@ const App = () => {
         >
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
-          <Route path="products" element={<AdminProducts />} />
+          <Route
+            path="products"
+            element={
+              <ErrorBoundary>
+                <AdminProducts />
+              </ErrorBoundary>
+            }
+          />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
 

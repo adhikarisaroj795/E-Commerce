@@ -51,6 +51,7 @@ class AdminProductController {
   static fetchAllProduct = async (req, res, next) => {
     try {
       const listOfProduct = await prod_svc.getAllProducts();
+      console.log("igothit");
       res.status(200).json({
         status: true,
         data: listOfProduct,

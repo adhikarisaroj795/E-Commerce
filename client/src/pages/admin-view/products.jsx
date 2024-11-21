@@ -1,4 +1,5 @@
 import ProductImageUpload from "@/components/admin-view/image-upload";
+import AdminProductTile from "@/components/admin-view/product-tile";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,8 +9,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
-import { fetchAllProducts } from "@/store/admin-slice/products-slice/asyncThunk";
-import React, { Fragment, useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  addNewProduct,
+  fetchAllProducts,
+} from "@/store/admin-slice/products-slice/asyncThunk";
+import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const initialFormData = {
@@ -31,14 +36,46 @@ const AdminProducts = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const { productList } = useSelector((state) => state.adminProducts);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
+  const { toast } = useToast();
   const onSubmit = (event) => {
     event.preventDefault();
+    dispatch(
+      addNewProduct({
+        ...formData,
+        image: uploadedImageUrl,
+      })
+    ).then((data) => {
+      console.log(data);
+      if (data?.payload.status) {
+        dispatch(fetchAllProducts());
+        setOpenCreateProductsDialog(false);
+        setImageFile(null);
+        setFormData(initialFormData);
+        toast({
+          title: "Product add successfully",
+        });
+      }
+    });
   };
+
+  console.log(uploadedImageUrl, "he");
   useEffect(() => {
-    dispatch(fetchAllProducts());
+    const fetchProducts = async () => {
+      try {
+        await dispatch(fetchAllProducts()).unwrap(); // Use unwrap for better error handling
+        console.log("Products fetched successfully");
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
   }, [dispatch]);
-  console.log(productList, "productLost");
+
+  console.log(productList, "productList"); // Log product list
+
   return (
     <Fragment>
       <div className="mb-5 w-full flex justify-end">
@@ -46,7 +83,19 @@ const AdminProducts = () => {
           Add New Products
         </Button>
       </div>
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {productList && productList.length > 0
+          ? productList.map((productItem) => (
+              <AdminProductTile
+                key={productItem._id}
+                setCurrentEditedId={setCurrentEditedId}
+                product={productItem}
+                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
+                setFormData={setFormData}
+              />
+            ))
+          : null}
+      </div>
       <Sheet
         open={openCreateProductsDialog}
         onOpenChange={() => setOpenCreateProductsDialog(false)}
@@ -79,5 +128,3 @@ const AdminProducts = () => {
 };
 
 export default AdminProducts;
-
-//4:23:24

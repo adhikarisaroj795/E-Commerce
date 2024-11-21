@@ -28,11 +28,13 @@ export const addNewProduct = createAsyncThunk(
 );
 export const fetchAllProducts = createAsyncThunk(
   "/products/fetchAllProducts",
-  async ({ rejectWithValue }) => {
+
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         "http://localhost:3921/api/v1/admin/products/get"
       );
+
       return response?.data; // For fulfilled action
     } catch (error) {
       // Pass the response data (or custom message) to rejected action
