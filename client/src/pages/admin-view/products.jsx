@@ -12,6 +12,7 @@ import { addProductFormElements } from "@/config";
 import { useToast } from "@/hooks/use-toast";
 import {
   addNewProduct,
+  editProduct,
   fetchAllProducts,
 } from "@/store/admin-slice/products-slice/asyncThunk";
 import { Fragment, useEffect, useState } from "react";
@@ -41,6 +42,17 @@ const AdminProducts = () => {
   const { toast } = useToast();
   const onSubmit = (event) => {
     event.preventDefault();
+
+    currentEditedId !== null
+      ? dispatch(
+          editProduct({
+            id: currentEditedId,
+            formData,
+          }).then((data) => {
+            console.log(data);
+          })
+        )
+      : "";
     dispatch(
       addNewProduct({
         ...formData,
@@ -74,12 +86,16 @@ const AdminProducts = () => {
     fetchProducts();
   }, [dispatch]);
 
-  console.log(productList, "productList"); // Log product list
+  // Log product list
 
   return (
     <Fragment>
       <div className="mb-5 w-full flex justify-end">
-        <Button onClick={() => setOpenCreateProductsDialog(true)}>
+        <Button
+          onClick={() => {
+            setOpenCreateProductsDialog(true);
+          }}
+        >
           Add New Products
         </Button>
       </div>
@@ -98,11 +114,17 @@ const AdminProducts = () => {
       </div>
       <Sheet
         open={openCreateProductsDialog}
-        onOpenChange={() => setOpenCreateProductsDialog(false)}
+        onOpenChange={() => {
+          setOpenCreateProductsDialog(false);
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
+        }}
       >
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
-            <SheetTitle>Add New Product</SheetTitle>
+            <SheetTitle>
+              {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+            </SheetTitle>
           </SheetHeader>
           <ProductImageUpload
             imageFile={imageFile}
@@ -111,13 +133,14 @@ const AdminProducts = () => {
             setUploadedImageUrl={setUploadedImageUrl}
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
+            isEditMode={currentEditedId !== null}
           />
           <div className="py-6">
             <CommonForm
               formData={formData}
               setFormData={setFormData}
               formControls={addProductFormElements}
-              buttonText="Add"
+              buttonText={currentEditedId !== null ? "Edit" : "Add"}
               onSubmit={onSubmit}
             />
           </div>
@@ -128,3 +151,5 @@ const AdminProducts = () => {
 };
 
 export default AdminProducts;
+
+// 4: 50
