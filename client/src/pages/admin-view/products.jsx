@@ -12,6 +12,7 @@ import { addProductFormElements } from "@/config";
 import { useToast } from "@/hooks/use-toast";
 import {
   addNewProduct,
+  deleteProduct,
   editProduct,
   fetchAllProducts,
 } from "@/store/admin-slice/products-slice/asyncThunk";
@@ -40,44 +41,62 @@ const AdminProducts = () => {
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const dispatch = useDispatch();
   const { toast } = useToast();
+
   const onSubmit = (event) => {
     event.preventDefault();
 
     currentEditedId !== null
       ? dispatch(
           editProduct({
-            id: currentEditedId,
             formData,
-          }).then((data) => {
-            console.log(data);
+            id: currentEditedId,
           })
-        )
-      : "";
-    dispatch(
-      addNewProduct({
-        ...formData,
-        image: uploadedImageUrl,
-      })
-    ).then((data) => {
-      console.log(data);
+        ).then((data) => {
+          console.log(data);
+
+          if (data.payload?.status) {
+            dispatch(fetchAllProducts());
+            setFormData(initialFormData);
+            setOpenCreateProductsDialog(false);
+            setCurrentEditedId(null);
+          }
+        })
+      : dispatch(
+          addNewProduct({
+            ...formData,
+            image: uploadedImageUrl,
+          })
+        ).then((data) => {
+          if (data?.payload.status) {
+            dispatch(fetchAllProducts());
+            setOpenCreateProductsDialog(false);
+            setImageFile(null);
+            setFormData(initialFormData);
+            toast({
+              title: "Product add successfully",
+            });
+          }
+        });
+  };
+
+  const handleDelete = (getCurrentProductId) => {
+    dispatch(deleteProduct(getCurrentProductId)).then((data) => {
       if (data?.payload.status) {
         dispatch(fetchAllProducts());
-        setOpenCreateProductsDialog(false);
-        setImageFile(null);
-        setFormData(initialFormData);
-        toast({
-          title: "Product add successfully",
-        });
       }
     });
   };
 
-  console.log(uploadedImageUrl, "he");
+  const isFormValid = () => {
+    return Object.keys(formData)
+      .map((key) => formData[key] !== "")
+      .every((item) => item);
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         await dispatch(fetchAllProducts()).unwrap(); // Use unwrap for better error handling
-        console.log("Products fetched successfully");
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -108,6 +127,7 @@ const AdminProducts = () => {
                 product={productItem}
                 setOpenCreateProductsDialog={setOpenCreateProductsDialog}
                 setFormData={setFormData}
+                handleDelete={handleDelete}
               />
             ))
           : null}
@@ -142,6 +162,7 @@ const AdminProducts = () => {
               formControls={addProductFormElements}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
               onSubmit={onSubmit}
+              isBtnDisabled={!isFormValid}
             />
           </div>
         </SheetContent>

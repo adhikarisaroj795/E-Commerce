@@ -3,11 +3,11 @@ import axios from "axios";
 
 export const addNewProduct = createAsyncThunk(
   "/products/addnewproduct",
-  async (FormData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         "http://localhost:3921/api/v1/admin/products/add",
-        FormData,
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -49,11 +49,13 @@ export const fetchAllProducts = createAsyncThunk(
 );
 export const editProduct = createAsyncThunk(
   "/products/editProduct",
-  async (id, FormData, { rejectWithValue }) => {
+  async ({ formData, id }, { rejectWithValue }) => {
     try {
+      console.log(FormData, "data from thunk");
+
       const response = await axios.put(
-        `http://localhost:3921/api/v1/admin/products/edit/:${id}`,
-        FormData,
+        `http://localhost:3921/api/v1/admin/products/edit/${id}`,
+        formData,
         {
           headers: {
             "Content-Type": "application/json",

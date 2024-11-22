@@ -63,6 +63,7 @@ class AdminProductController {
   };
   static editProduct = async (req, res, next) => {
     try {
+      console.log("i am being hit");
       const { id } = req.params;
       const {
         image,

@@ -15,7 +15,6 @@ const ProductImageUpload = ({
   setImageLoadingState,
   isEditMode,
 }) => {
-  console.log(isEditMode);
   const inputRef = useRef(null);
   const handleImageFileChange = (e) => {
     const selectedFile = e.target.files?.[0];
@@ -47,7 +46,6 @@ const ProductImageUpload = ({
         "http://localhost:3921/api/v1/admin/products/upload-image",
         data
       );
-      console.log(response, "res");
 
       if (response?.data?.status) {
         setUploadedImageUrl(response.data.result.url);

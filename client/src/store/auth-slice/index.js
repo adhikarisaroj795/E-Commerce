@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { checkAuth, loginUser, registerUser } from "./asyncThunk";
+import { checkAuth, loginUser, logOutUser, registerUser } from "./asyncThunk";
 
 const initialState = {
   isAuthenticated: false,
@@ -50,6 +50,11 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.rejected, (state, action) => {
         (state.isLoading = false), (state.user = action.payload);
+        state.isAuthenticated = false;
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(logOutUser.fulfilled, (state, action) => {
+        (state.isLoading = false), (state.user = null);
         state.isAuthenticated = false;
         state.error = action.payload || action.error.message;
       });

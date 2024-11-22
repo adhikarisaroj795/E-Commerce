@@ -7,6 +7,7 @@ const AdminProductTile = ({
   setFormData,
   setOpenCreateProductsDialog,
   setCurrentEditedId,
+  handleDelete,
 }) => {
   return (
     <Card className="w-full max-w-sm mx-auto">
@@ -20,8 +21,15 @@ const AdminProductTile = ({
         </div>
         <CardContent>
           <h2 className="text-xl mt-2 font-bold mb-2">{product?.title}</h2>
-          <span className="text-red-500 text-sm font-serif font-bold">
-            {product?.category}
+          <span className=" flex justify-between text-red-500 text-sm font-serif font-bold mb-1">
+            <p className="">{product?.category}</p>
+            <p
+              className={
+                product?.totalStock < 10 ? "text-red-500 " : "text-green-500"
+              }
+            >
+              Stock {product?.totalStock}
+            </p>
           </span>
           <div className="flex justify-between items-center mb-2">
             <span
@@ -46,7 +54,13 @@ const AdminProductTile = ({
           >
             Edit
           </Button>
-          <Button>Delete</Button>
+          <Button
+            onClick={() => {
+              handleDelete(product?._id);
+            }}
+          >
+            Delete
+          </Button>
         </CardFooter>
       </div>
     </Card>

@@ -70,3 +70,25 @@ export const checkAuth = createAsyncThunk(
     }
   }
 );
+
+export const logOutUser = createAsyncThunk(
+  "/auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3921/api/v1/auth/logout",
+        {},
+
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);

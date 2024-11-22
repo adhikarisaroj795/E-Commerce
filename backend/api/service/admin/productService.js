@@ -66,7 +66,7 @@ class ProductService {
     totalStock
   ) => {
     try {
-      const findProduct = await productModel.findById(id);
+      let findProduct = await productModel.findById(id);
       if (!findProduct) {
         throw new ErrorHandler("No products Found", 404);
       }
@@ -74,10 +74,11 @@ class ProductService {
       findProduct.description = description || findProduct.description;
       findProduct.category = category || findProduct.category;
       findProduct.brand = brand || findProduct.brand;
-      findProduct.price = price || findProduct.price;
+      findProduct.price = price === "" ? 0 : price || findProduct.price;
       findProduct.totalStock = totalStock || findProduct.totalStock;
-      findProduct.salePrice = salePrice || findProduct.salePrice;
-      findProduct.totalStock = image || findProduct.image;
+      findProduct.salePrice =
+        salePrice === "" ? 0 : salePrice || findProduct.salePrice;
+      findProduct.image = image || findProduct.image;
 
       await findProduct.save();
       return findProduct;

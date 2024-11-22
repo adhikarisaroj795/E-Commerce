@@ -6,7 +6,6 @@ const initialState = {
   productList: [],
 };
 const AdminProductSlice = createSlice({
-  
   name: "adminProducts",
   initialState,
   reducers: {},
@@ -17,7 +16,6 @@ const AdminProductSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
-        console.log(action, "imaction");
         (state.isLoading = false), (state.productList = action.payload.data);
       })
       .addCase(fetchAllProducts.rejected, (state) => {
