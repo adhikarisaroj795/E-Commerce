@@ -157,3 +157,11 @@ export const filterOptions = {
     { id: "men", label: "Men" },
   ],
 };
+
+export const sortOptions = [
+  { id: "price-lowtohigh", label: "Price: Low To High" },
+  { id: "price-hightolow", label: "Price: High To Low" },
+
+  { id: "title-atoz", label: "Title: A To Z" },
+  { id: "title-ztoa", label: "Title: Z To A" },
+];

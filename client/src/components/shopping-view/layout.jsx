@@ -7,7 +7,7 @@ const ShoppingLayout = () => {
     <div className="flex flex-col bg-white overflow-hidden">
       {/* commom header  */}
       <ShoppingHeader />
-      <main className="flex fex-col w-full">
+      <main className="flex flex-col w-full">
         <Outlet />
       </main>
     </div>
