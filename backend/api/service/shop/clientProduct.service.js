@@ -8,7 +8,7 @@ class ClientProductService {
       if (!products) {
         throw new ErrorHandler("no products found", 404);
       }
-      return product;
+      return products;
     } catch (error) {
       throw error;
     }
