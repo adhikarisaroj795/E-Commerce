@@ -11,6 +11,8 @@ const connectDb = async () => {
     console.log(`MongoDB connected with the host: ${conn.connection.host}`);
   } catch (error) {
     console.error("MongoDB connection error:", error);
+    console.log("pease enable your ip first");
+
     process.exit(1); // Exit process if connection fails
   }
 };
