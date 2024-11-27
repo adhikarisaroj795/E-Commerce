@@ -15,6 +15,7 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+productSchema.index({ title: 1 });
 
 const productModel = mongoose.model("Product", productSchema);
 
