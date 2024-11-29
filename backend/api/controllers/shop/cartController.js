@@ -16,6 +16,16 @@ class CartController {
   };
   static fetchCartItems = async (req, res, next) => {
     try {
+      const { userId } = req.params;
+
+      const { cart, populateCartItems } = await crt_svc.cartItem(userId);
+      res.status(200).json({
+        status: true,
+        data: {
+          ...cart._doc,
+          items: populateCartItems,
+        },
+      });
     } catch (error) {
       next(error);
     }

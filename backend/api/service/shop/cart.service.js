@@ -49,5 +49,41 @@ class CartService {
       throw error;
     }
   };
+
+  static cartItem = async (userId) => {
+    try {
+      if (!userId) {
+        throw new ErrorHandler("User id required");
+      }
+      const cart = await cartModel.findOne({ userId }).populate({
+        path: "item.productId",
+        select: "image title price salePrice",
+      });
+      if (!cart) {
+        throw new ErrorHandler("cart not found");
+      }
+
+      const validItems = cart.items.filter(
+        (productItem) => productItem.productId
+      );
+      if (validItems.length < cart.items.length) {
+        cart.items = validItems;
+        await cart.save();
+      }
+
+      const populateCartItems = validItems.map((item) => ({
+        productId: item.productId._id,
+        image: item.productId.image,
+        title: item.productId.title,
+        price: item.productId.price,
+        salePrice: item.productId.salePrice,
+        quantity: item.productId.quantity,
+      }));
+
+      return { cart, populateCartItems };
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 module.exports = CartService;
