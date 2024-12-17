@@ -85,5 +85,50 @@ class CartService {
       throw error;
     }
   };
+
+  static updatedCart = async (userId, productId, quantity) => {
+    try {
+      if (
+        !userId ||
+        userId.trim() === "" ||
+        !productId ||
+        productId.trim() === "" ||
+        !quantity ||
+        quantity.trim() === "" ||
+        quantity <= 0
+      ) {
+        throw new ErrorHandler("All fields are required", 400);
+      }
+      const cart = await cartModel.findOne({ userId });
+      if (!cart) {
+        throw new ErrorHandler("No cart found");
+      }
+      const findCurrentProductIndex = cart.items.findIndex(
+        (item) => item.productId.toString() === productId
+      );
+      if (findCurrentProductIndex === -1) {
+        throw new ErrorHandler("Cart item not present", 404);
+      }
+
+      cart.items[findCurrentProductIndex].quantity = quantity;
+      await cart.save();
+      await cart.populate({
+        path: "items.productId",
+        select: "image title price salePrice",
+      });
+      const populateCartItems = cart.items.map((item) => ({
+        productId: item.productId ? item.productId._id : null,
+        image: item.image ? item.productId.image : "product not found",
+
+        title: item.productId.title,
+        price: item.price ? item.productId.price : null,
+        salePrice: item.salePrice ? item.productId.salePrice : null,
+        quantity: item.quantity,
+      }));
+      return { cart, populateCartItems };
+    } catch (error) {
+      throw error;
+    }
+  };
 }
 module.exports = CartService;
